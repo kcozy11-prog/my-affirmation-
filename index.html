@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>나의 확언</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8; --card: #fff; --border: #EBEBEB; --text: #1A1A1A;
+  --sub: #888; --accent: #E85D3A; --purple: #6366F1; --green: #22C55E;
+  --warm: #F59E0B;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:0;height:0}
+button{cursor:pointer;font-family:inherit;transition:all .15s}
+button:active{transform:scale(.96)}
+input:focus,textarea:focus{border-color:var(--text)!important;outline:none}
+.app{max-width:430px;margin:0 auto;min-height:100vh;position:relative}
+.header{padding:20px 24px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
+.header-title{font-size:18px;font-weight:700;letter-spacing:-.02em}
+.back-btn{background:none;border:none;font-size:14px;color:var(--sub)}
+.body{padding:24px 24px 100px}
+.screen{display:none}.screen.active{display:block}
+.streak-card{background:var(--card);border-radius:16px;padding:28px 24px;border:1px solid var(--border);margin-bottom:20px;display:flex;align-items:center;gap:20px}
+.streak-num{font-size:48px;font-weight:800;color:var(--accent);line-height:1}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:12px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:16px}
+.pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;border:1px solid #DDD;background:var(--card);color:#666;cursor:pointer;white-space:nowrap;transition:all .15s}
+.pill.on{border:1.5px solid var(--text);background:var(--text);color:#fff}
+.btn-primary{width:100%;padding:16px;border-radius:14px;background:var(--text);color:#fff;border:none;font-size:15px;font-weight:600;margin-top:16px}
+.btn-secondary{width:100%;padding:14px;border-radius:14px;background:#F2F2F0;color:var(--text);border:none;font-size:14px;font-weight:600;margin-top:10px}
+.btn-accent{width:100%;padding:14px;border-radius:14px;background:var(--accent);color:#fff;border:none;font-size:14px;font-weight:600;margin-top:10px}
+.menu-btn{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;gap:14px;text-align:left}
+.menu-btn:hover{background:var(--bg)}
+.menu-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+.menu-label{font-size:15px;font-weight:600}
+.menu-desc{font-size:12px;color:#999;margin-top:2px}
+.practice-card{background:var(--card);border-radius:20px;padding:48px 28px;border:1px solid var(--border);margin-top:12px;text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .35s ease}
+.practice-card.fade-out{opacity:0}
+.aff-text{font-size:24px;font-weight:700;line-height:1.6;word-break:keep-all;margin-top:20px}
+.aff-counter{font-size:13px;color:#BBB;margin-top:16px}
+.tag{display:inline-block;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600}
+.tag-accent{background:#E85D3A15;color:var(--accent)}
+.tag-blue{background:#3B82F615;color:#3B82F6}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:none;transition:all .15s}
+.badge-off{background:#F2F2F0;color:#666}
+.badge-accent{background:var(--accent);color:#fff}
+.badge-purple{background:var(--purple);color:#fff}
+.badge-warm{background:var(--warm);color:#fff}
+.controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:28px}
+.ctrl-btn{width:52px;height:52px;border-radius:50%;border:1px solid #DDD;background:var(--card);display:flex;align-items:center;justify-content:center;color:#555;font-size:18px}
+.ctrl-btn.big{width:64px;height:64px;font-size:22px}
+.ctrl-btn.active{background:var(--text);color:#fff}
+.ctrl-btn.purple{color:var(--purple)}
+.ctrl-btn.rec-active{background:#FDECEA;color:var(--accent);border-color:var(--accent)}
+.voice-panel{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-top:12px;margin-bottom:8px}
+.voice-styles{display:flex;gap:8px}
+.voice-style-btn{flex:1;padding:14px 8px;border-radius:12px;text-align:center;border:1px solid #DDD;background:var(--card);cursor:pointer;transition:all .15s}
+.voice-style-btn.on{border:2px solid var(--text);background:var(--bg)}
+.mode-bar{display:flex;border-radius:12px;overflow:hidden;border:1px solid #DDD;margin-top:16px}
+.mode-btn{flex:1;padding:12px;text-align:center;font-size:13px;font-weight:600;background:var(--card);color:var(--sub);border:none}
+.mode-btn.on{background:var(--text);color:#fff}
+.speaking-bar{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;background:#E85D3A15;color:var(--accent);margin-top:12px}
+.bar-anim{display:inline-flex;gap:3px;align-items:flex-end;height:14px}
+.bar-anim span{width:3px;border-radius:2px;background:var(--accent);animation:bp .8s ease-in-out infinite alternate}
+.bar-anim span:nth-child(2){animation-delay:.15s}
+.bar-anim span:nth-child(3){animation-delay:.3s}
+.bar-anim span:nth-child(4){animation-delay:.45s}
+@keyframes bp{0%{height:4px}100%{height:14px}}
+.waiting-card{background:#F0FFF4;border-radius:14px;padding:20px;text-align:center;margin-top:16px;border:1px solid #C6F6D5}
+.complete-card{background:var(--card);border-radius:20px;padding:48px 28px;border:1px solid var(--border);margin-top:20px;text-align:center}
+.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:12px}
+.input-field{width:100%;padding:14px 16px;border-radius:12px;border:1px solid #DDD;font-size:14px;background:var(--card);font-family:inherit}
+textarea.input-field{min-height:80px;resize:vertical}
+.timer-dropdown{position:absolute;right:0;top:36px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,.08);z-index:10;display:flex;gap:8px}
+.timer-opt{padding:8px 14px;border-radius:8px;border:1px solid #DDD;background:var(--card);color:#555;font-size:13px;font-weight:600}
+.timer-opt.on{background:var(--text);color:#fff}
+.sm-btn{width:32px;height:32px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;color:#555;cursor:pointer;font-size:14px}
+.rec-indicator{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;background:#FDECEA;color:var(--accent);margin-top:12px}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* My voice card */
+.my-voice-card{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-radius:14px;padding:16px;border:1px solid #FDE68A;margin-top:12px}
+.my-voice-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:8px;font-size:10px;font-weight:700;background:var(--warm);color:#fff}
+.source-bar{display:flex;border-radius:10px;overflow:hidden;border:1px solid #DDD;margin-top:12px}
+.source-btn{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600;background:var(--card);color:var(--sub);border:none}
+.source-btn.on{background:var(--text);color:#fff}
+.hidden{display:none!important}
+.flex{display:flex}.gap-8{gap:8px}.gap-10{gap:10px}.gap-12{gap:12px}.items-center{align-items:center}.justify-between{justify-content:space-between}.flex-1{flex:1}.text-center{text-align:center}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}.mt-24{margin-top:24px}.mt-28{margin-top:28px}.mt-32{margin-top:32px}.mb-20{margin-bottom:20px}.mb-24{margin-bottom:24px}
+.fw{width:100%}.empty{text-align:center;padding:40px 20px;color:#BBB;font-size:14px;line-height:1.7}
+.hint-text{text-align:center;margin-top:12px;font-size:12px;color:#BBB}
+.top-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.info-box{background:#F8F8F6;border-radius:12px;padding:14px 16px;font-size:12px;color:#888;line-height:1.6;margin-top:12px;border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="header">
+    <button class="back-btn hidden" id="backBtn" onclick="goHome()">← 돌아가기</button>
+    <div style="width:60px" id="backSpacer"></div>
+    <div class="header-title" id="headerTitle">나의 확언</div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="body">
+
+    <!-- HOME -->
+    <div class="screen active" id="screenHome">
+      <div class="streak-card">
+        <div><div class="streak-num" id="streakNum">0</div><div style="font-size:13px;color:var(--sub);margin-top:4px">일 연속</div></div>
+        <div style="flex:1"><div style="font-size:16px;font-weight:700" id="streakMsg">오늘 첫 확언을 시작해보세요</div><div style="font-size:13px;color:var(--sub);margin-top:4px">총 <span id="totalSessions">0</span>회 실천</div></div>
+      </div>
+      <div class="sec-title">카테고리</div>
+      <div class="pills" id="catPills"></div>
+      <button class="btn-primary" onclick="startPractice()" id="startBtn">확언 시작하기</button>
+      <div class="mt-32">
+        <div class="sec-title">메뉴</div>
+        <button class="menu-btn" onclick="showScreen('ai')"><div class="menu-icon" style="background:#FFF3EF">⭐</div><div><div class="menu-label">AI 확언 추천</div><div class="menu-desc">기분과 목표에 맞는 확언 생성</div></div></button>
+        <button class="menu-btn" onclick="showScreen('editor')"><div class="menu-icon" style="background:#EFF6FF">✏️</div><div><div class="menu-label">확언 편집</div><div class="menu-desc">나만의 확언 추가·수정·삭제</div></div></button>
+        <button class="menu-btn" onclick="showScreen('myvoice')"><div class="menu-icon" style="background:#FFF7ED">🎙️</div><div><div class="menu-label">내 목소리 확언</div><div class="menu-desc">녹음한 내 목소리로 확언 듣기</div></div></button>
+        <button class="menu-btn" onclick="showScreen('history')"><div class="menu-icon" style="background:#F0FFF4">📖</div><div><div class="menu-label">확언 일지</div><div class="menu-desc">느낀 점 기록 모아보기</div></div></button>
+      </div>
+    </div>
+
+    <!-- PRACTICE -->
+    <div class="screen" id="screenPractice">
+      <div class="top-bar">
+        <button class="badge badge-off" id="musicBadge" onclick="toggleMusic()">🎵 OFF</button>
+        <button class="badge badge-off" id="voiceBadge" onclick="toggleVoicePanel()">🔊 차분한 톤</button>
+        <div style="position:relative">
+          <button class="badge badge-off" id="timerBadge" onclick="toggleTimerDD()">⏱ 5초</button>
+          <div class="timer-dropdown hidden" id="timerDD"></div>
+        </div>
+      </div>
+
+      <!-- Voice Source Selector -->
+      <div id="voiceSourceBar" class="mt-8">
+        <div class="source-bar">
+          <button class="source-btn on" id="srcTTS" onclick="setVoiceSource('tts')">🔊 TTS 음성</button>
+          <button class="source-btn" id="srcMy" onclick="setVoiceSource('myvoice')">🎙 내 목소리</button>
+        </div>
+      </div>
+
+      <!-- Voice Panel -->
+      <div class="voice-panel hidden" id="voicePanel">
+        <div class="flex items-center justify-between mb-20">
+          <div style="font-size:14px;font-weight:700">음성 가이드</div>
+          <button class="badge badge-accent" id="voiceToggle" onclick="toggleVoice()">🔊 ON</button>
+        </div>
+        <div id="voiceSettings">
+          <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:10px">목소리 스타일</div>
+          <div class="voice-styles" id="voiceStylesEl"></div>
+          <div style="font-size:12px;font-weight:600;color:#888;margin-top:16px;margin-bottom:8px">가이드 모드</div>
+          <div class="mode-bar">
+            <button class="mode-btn on" id="modeListenBtn" onclick="setVoiceMode('listen')">🎧 듣기만</button>
+            <button class="mode-btn" id="modeFollowBtn" onclick="setVoiceMode('follow')">🗣 따라 읽기</button>
+          </div>
+          <div style="font-size:11px;color:#999;margin-top:8px;line-height:1.5" id="modeDesc">확언을 음성으로 읽어줍니다.</div>
+          <button style="margin-top:12px;padding:10px 16px;border-radius:10px;border:1px solid #DDD;background:var(--card);font-size:13px;font-weight:600;color:var(--purple);width:100%" onclick="testVoice()">🔊 음성 테스트</button>
+        </div>
+      </div>
+
+      <div class="practice-card" id="practiceCard">
+        <div class="tag tag-accent" id="affCat"></div>
+        <div class="aff-text" id="affText"></div>
+        <div class="aff-counter" id="affCounter"></div>
+      </div>
+
+      <!-- Speaking / Recording status -->
+      <div class="text-center" id="speakingArea"></div>
+
+      <!-- Follow mode: record my voice -->
+      <div class="hidden mt-12" id="followRecordArea">
+        <div class="my-voice-card">
+          <div class="flex items-center justify-between">
+            <div style="font-size:13px;font-weight:700">이 확언을 내 목소리로 녹음</div>
+            <button class="ctrl-btn" style="width:40px;height:40px;font-size:16px" id="followRecBtn" onclick="toggleFollowRec()">🎙</button>
+          </div>
+          <div style="font-size:11px;color:#999;margin-top:6px" id="followRecStatus">버튼을 누르고 확언을 읽어주세요</div>
+          <audio id="followRecAudio" controls class="hidden mt-8" style="width:100%;height:36px"></audio>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" onclick="goPrev()">⏮</button>
+        <button class="ctrl-btn purple hidden" id="replayBtn" onclick="replayVoice()">🔄</button>
+        <button class="ctrl-btn big" id="playPauseBtn" onclick="toggleAutoPlay()">▶</button>
+        <button class="ctrl-btn" onclick="goNext()">⏭</button>
+      </div>
+      <div class="hint-text" id="hintText"></div>
+      <button class="btn-secondary mt-24" onclick="endPractice()">확언 종료하기</button>
+    </div>
+
+    <!-- COMPLETE -->
+    <div class="screen" id="screenComplete">
+      <div class="complete-card">
+        <div style="font-size:48px;margin-bottom:16px">✦</div>
+        <div style="font-size:22px;font-weight:700">오늘의 확언 완료</div>
+        <div style="font-size:14px;color:#888;margin-top:8px" id="completeCount"></div>
+        <div class="tag tag-accent mt-16" style="font-size:13px" id="completeStreak"></div>
+      </div>
+      <div class="mt-28">
+        <div class="sec-title">오늘 확언 후 느낀 점</div>
+        <textarea class="input-field" id="journalInput" placeholder="확언하면서 어떤 느낌이 들었나요?"></textarea>
+        <div class="flex gap-10 mt-12">
+          <button class="ctrl-btn" style="width:44px;height:44px;font-size:16px" id="journalRecBtn" onclick="toggleJournalRec()">🎙</button>
+          <audio id="journalRecAudio" controls style="flex:1;height:44px" class="hidden"></audio>
+        </div>
+        <button class="btn-primary" onclick="saveJournal()">기록 저장하기</button>
+        <button class="btn-secondary" onclick="goHome()">건너뛰기</button>
+      </div>
+    </div>
+
+    <!-- AI -->
+    <div class="screen" id="screenAi">
+      <div style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.7">지금 기분과 오늘의 목표를 알려주시면<br>맞춤 확언을 추천해드립니다.</div>
+      <div class="sec-title">지금 기분은?</div>
+      <div class="pills mb-20" id="moodPills"></div>
+      <div class="sec-title">오늘의 목표는?</div>
+      <div class="pills mb-24" id="goalPills"></div>
+      <button class="btn-primary hidden" id="aiGenBtn" onclick="generateAi()">확언 추천받기</button>
+      <div id="aiResultsArea" class="mt-28 hidden">
+        <div class="sec-title">추천 확언</div>
+        <div id="aiResultList"></div>
+        <button class="btn-primary" onclick="addAiResults()">내 확언에 추가하기</button>
+      </div>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="screen" id="screenEditor">
+      <div class="flex gap-8 mb-20">
+        <input class="input-field flex-1" id="newAffInput" placeholder="새 확언을 입력하세요" onkeydown="if(event.key==='Enter')addCustomAff()">
+        <button style="width:48px;height:48px;border-radius:12px;background:#1A1A1A;color:#fff;border:none;font-size:20px" onclick="addCustomAff()">+</button>
+      </div>
+      <div class="pills" id="editorCatPills"></div>
+      <div id="editorList"></div>
+    </div>
+
+    <!-- MY VOICE LIBRARY -->
+    <div class="screen" id="screenMyvoice">
+      <div style="font-size:14px;color:#666;margin-bottom:16px;line-height:1.7">
+        따라 읽기 모드에서 녹음한 내 목소리가 여기에 저장됩니다.<br>
+        다음 날 확언할 때 <strong>내 목소리</strong>로 들을 수 있어요.
+      </div>
+      <div class="info-box">
+        💡 <strong>사용법:</strong> 확언 실천 → 따라 읽기 모드 → 🎙 버튼으로 녹음<br>
+        녹음된 확언은 자동 저장되어 다음에 재생할 수 있습니다.
+      </div>
+      <div class="mt-20" id="myVoiceList"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="screen" id="screenHistory"><div id="historyList"></div></div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
+const DEFAULT_AFF = {
+  "자기 확신":["나는 충분한 사람이다","나는 내 결정을 신뢰한다","나는 매일 더 강해지고 있다","나는 나 자신을 있는 그대로 받아들인다","나는 내 안의 힘을 믿는다"],
+  "성공과 성장":["나는 원하는 것을 이룰 능력이 있다","모든 도전은 나를 성장시킨다","나는 꾸준함으로 목표에 다가간다","나의 노력은 반드시 결실을 맺는다","나는 오늘도 한 걸음 전진한다"],
+  "평온과 회복":["나는 지금 이 순간 평온하다","나는 스스로에게 쉬어갈 여유를 준다","나는 힘든 시간도 지나갈 것을 안다","나는 나를 위한 시간을 소중히 여긴다","나는 깊이 숨 쉬고 긴장을 내려놓는다"],
+  "감사와 긍정":["나는 오늘 하루에 감사한다","내 삶에는 좋은 것들이 가득하다","나는 작은 행복을 알아차린다","나는 주변 사람들에게 감사한다","오늘도 나에게 좋은 일이 일어난다"],
+};
+const AI_MOOD = {피곤함:["나는 충분히 쉴 자격이 있다","내 에너지는 서서히 회복되고 있다","오늘 하루도 나는 잘 해내고 있다","나는 내 몸의 신호에 귀 기울인다"],불안함:["나는 지금 이 순간 안전하다","걱정은 사실이 아니다","나는 불확실함 속에서도 괜찮다","나는 내가 통제할 수 있는 것에 집중한다"],의욕넘침:["나의 열정은 세상을 변화시킨다","나는 오늘 놀라운 일을 해낸다","나의 가능성은 무한하다","나는 행동으로 꿈을 현실로 만든다"],평범함:["평범한 하루도 소중하다","나는 꾸준함의 힘을 믿는다","작은 습관이 큰 변화를 만든다","나는 오늘도 묵묵히 나아간다"]};
+const AI_GOAL = {자신감:["나는 당당하다","나는 내 가치를 안다","나는 어떤 자리에서도 빛난다"],집중력:["나는 지금 이 순간에 온전히 집중한다","나의 마음은 고요하고 명료하다"],건강:["나는 내 몸을 사랑한다","나는 건강한 선택을 한다"],성장:["나는 매일 어제보다 나은 사람이 된다","배움은 나의 기쁨이다"]};
+const VOICE_CFG = {
+  calm:{label:"차분한 톤",icon:"🌙",rate:.75,pitch:.78,desc:"명상적이고 낮은 톤"},
+  warm:{label:"따뜻한 톤",icon:"☀️",rate:.82,pitch:1.05,desc:"밝고 응원하는 톤"},
+  neutral:{label:"담백한 톤",icon:"◯",rate:.85,pitch:.92,desc:"중립적이고 깔끔한 톤"},
+};
+
+// State
+let affirmations = [];
+Object.entries(DEFAULT_AFF).forEach(([cat,items])=>items.forEach(text=>affirmations.push({text,category:cat,custom:false})));
+
+let selCat="전체",curIdx=0,isAutoPlay=false,intervalSec=5,autoTimer=null;
+let musicOn=false,streak=0,lastDate=null,sessions=0,journals=[];
+let voiceOn=true,voiceStyle="calm",voiceMode="listen";
+let voiceSource="tts"; // "tts" | "myvoice"
+let isSpeaking=false,isWaiting=false;
+let aiMood="",aiGoal="",aiResultsData=[];
+
+// My voice recordings: { "확언 텍스트": blobURL }
+let myVoiceMap = {};
+// IndexedDB for persistent storage
+let db = null;
+
+const cats=()=>["전체",...Object.keys(DEFAULT_AFF),"내 확언"];
+const filtered=()=>{
+  if(selCat==="전체")return affirmations;
+  if(selCat==="내 확언")return affirmations.filter(a=>a.custom);
+  return affirmations.filter(a=>a.category===selCat);
+};
+
+// ═══════════════════════════════════════
+//  INDEXEDDB for voice recordings
+// ═══════════════════════════════════════
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open("AffirmationVoiceDB",1);
+    req.onupgradeneeded=e=>{e.target.result.createObjectStore("voices",{keyPath:"text"})};
+    req.onsuccess=e=>{db=e.target.result;resolve(db)};
+    req.onerror=e=>reject(e);
+  });
+}
+function saveVoiceToDB(text,blob){
+  if(!db)return;
+  const tx=db.transaction("voices","readwrite");
+  tx.objectStore("voices").put({text,blob,date:new Date().toISOString()});
+}
+function loadAllVoices(){
+  return new Promise((resolve)=>{
+    if(!db){resolve({});return}
+    const tx=db.transaction("voices","readonly");
+    const store=tx.objectStore("voices");
+    const req=store.getAll();
+    req.onsuccess=()=>{
+      const map={};
+      req.result.forEach(r=>{map[r.text]={blob:r.blob,date:r.date}});
+      resolve(map);
+    };
+    req.onerror=()=>resolve({});
+  });
+}
+function deleteVoiceFromDB(text){
+  if(!db)return;
+  const tx=db.transaction("voices","readwrite");
+  tx.objectStore("voices").delete(text);
+}
+
+async function initDB(){
+  await openDB();
+  const stored=await loadAllVoices();
+  Object.entries(stored).forEach(([text,{blob,date}])=>{
+    myVoiceMap[text]={url:URL.createObjectURL(blob),date};
+  });
+}
+
+// ═══════════════════════════════════════
+//  TTS ENGINE (optimized for naturalness)
+// ═══════════════════════════════════════
+const hasTTS = (typeof window !== "undefined" && "speechSynthesis" in window);
+
+function getKoVoice(){
+  if(!hasTTS) return null;
+  const v=window.speechSynthesis.getVoices();
+  const natural=v.find(x=>x.lang==="ko-KR"&&(x.name.includes("Natural")||x.name.includes("Enhanced")||x.name.includes("Premium")));
+  if(natural)return natural;
+  return v.find(x=>x.lang==="ko-KR")||v.find(x=>x.lang.startsWith("ko"))||v[0]||null;
+}
+if(hasTTS){
+  window.speechSynthesis.getVoices();
+  if(window.speechSynthesis.onvoiceschanged!==undefined)
+    window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+}
+
+function speak(text,onEnd){
+  if(!hasTTS){if(onEnd)onEnd();return}
+  window.speechSynthesis.cancel();
+  const cfg=VOICE_CFG[voiceStyle];
+  const u=new SpeechSynthesisUtterance(text);
+  const v=getKoVoice();
+  if(v)u.voice=v;
+  u.lang="ko-KR";
+  u.rate=cfg.rate;
+  u.pitch=cfg.pitch;
+  u.volume=1;
+  u.onend=()=>{if(onEnd)onEnd()};
+  u.onerror=()=>{if(onEnd)onEnd()};
+  window.speechSynthesis.speak(u);
+}
+function stopTTS(){if(hasTTS)window.speechSynthesis.cancel();isSpeaking=false;isWaiting=false}
+function testVoice(){
+  if(!hasTTS){alert("이 환경에서는 TTS가 지원되지 않습니다. Chrome 브라우저에서 열어주세요.");return}
+  speak("나는 충분한 사람이다");
+}
+
+// Play my recorded voice
+let currentAudio=null;
+function playMyVoice(text,onEnd){
+  stopMyVoice();
+  const rec=myVoiceMap[text];
+  if(!rec){if(onEnd)onEnd();return}
+  currentAudio=new Audio(rec.url);
+  currentAudio.onended=()=>{currentAudio=null;if(onEnd)onEnd()};
+  currentAudio.onerror=()=>{currentAudio=null;if(onEnd)onEnd()};
+  currentAudio.play();
+}
+function stopMyVoice(){
+  if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null}
+}
+
+function speakAffirmation(text){
+  if(!voiceOn)return;
+  isSpeaking=true;isWaiting=false;
+  renderSpeakingStatus();
+
+  const onDone=()=>{
+    isSpeaking=false;
+    if(voiceMode==="follow"){
+      // No "따라 읽어보세요" — just silent waiting
+      isWaiting=true;
+    }
+    renderSpeakingStatus();
+    updateFollowRecordArea();
+  };
+
+  // Choose source
+  if(voiceSource==="myvoice"&&myVoiceMap[text]){
+    playMyVoice(text,onDone);
+  } else {
+    speak(text,onDone);
+  }
+}
+
+function stopAll(){stopTTS();stopMyVoice();isSpeaking=false;isWaiting=false}
+
+// ═══════════════════════════════════════
+//  MUSIC
+// ═══════════════════════════════════════
+let audioCtx=null,musicTimer=null,musicNodes=[];
+const chords=[[261.63,329.63,392],[293.66,349.23,440],[329.63,392,493.88],[349.23,440,523.25]];
+function startMusic(){
+  if(musicOn)return;
+  audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==="suspended")audioCtx.resume();
+  musicOn=true;let ci=0;
+  const play=()=>{if(!musicOn)return;chords[ci].forEach(f=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type="sine";o.frequency.value=f;const t=audioCtx.currentTime;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.025,t+1.2);g.gain.linearRampToValueAtTime(0,t+4.5);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+4.5);musicNodes.push(o)});ci=(ci+1)%chords.length};
+  play();musicTimer=setInterval(play,3800);
+}
+function stopMusic(){musicOn=false;clearInterval(musicTimer);musicNodes.forEach(o=>{try{o.stop()}catch(e){}});musicNodes=[]}
+function toggleMusic(){if(musicOn)stopMusic();else startMusic();updateMusicBadge()}
+
+// ═══════════════════════════════════════
+//  RECORDING (follow mode per-affirmation)
+// ═══════════════════════════════════════
+let followRecorder=null,followChunks=[],followRecording=false;
+
+function toggleFollowRec(){
+  if(followRecording){
+    followRecorder.stop();followRecording=false;
+    document.getElementById("followRecBtn").className="ctrl-btn";
+    document.getElementById("followRecStatus").textContent="저장 중...";
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    followRecorder=new MediaRecorder(stream);
+    followChunks=[];
+    followRecorder.ondataavailable=e=>followChunks.push(e.data);
+    followRecorder.onstop=()=>{
+      const blob=new Blob(followChunks,{type:"audio/webm"});
+      const url=URL.createObjectURL(blob);
+      const f=filtered();
+      const text=f[curIdx]?.text;
+      if(text){
+        myVoiceMap[text]={url,date:new Date().toISOString()};
+        saveVoiceToDB(text,blob);
+      }
+      const au=document.getElementById("followRecAudio");
+      au.src=url;au.classList.remove("hidden");
+      document.getElementById("followRecStatus").textContent="✅ 녹음 저장됨! 다음에 내 목소리로 재생됩니다.";
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    followRecorder.start();followRecording=true;
+    document.getElementById("followRecBtn").className="ctrl-btn rec-active";
+    document.getElementById("followRecStatus").textContent="🔴 녹음 중... 확언을 읽어주세요";
+    document.getElementById("followRecAudio").classList.add("hidden");
+  }).catch(()=>alert("마이크 접근 권한이 필요합니다."));
+}
+
+// Journal recording
+let journalRec=null,journalChunks=[],journalRecording=false,journalRecUrl=null;
+function toggleJournalRec(){
+  if(journalRecording){
+    journalRec.stop();journalRecording=false;
+    document.getElementById("journalRecBtn").style.background="";
+    document.getElementById("journalRecBtn").style.color="";
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    journalRec=new MediaRecorder(stream);journalChunks=[];
+    journalRec.ondataavailable=e=>journalChunks.push(e.data);
+    journalRec.onstop=()=>{
+      const blob=new Blob(journalChunks,{type:"audio/webm"});
+      journalRecUrl=URL.createObjectURL(blob);
+      const au=document.getElementById("journalRecAudio");
+      au.src=journalRecUrl;au.classList.remove("hidden");
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    journalRec.start();journalRecording=true;
+    document.getElementById("journalRecBtn").style.background="#FDECEA";
+    document.getElementById("journalRecBtn").style.color="var(--accent)";
+  }).catch(()=>alert("마이크 접근 권한이 필요합니다."));
+}
+
+// ═══════════════════════════════════════
+//  STREAK
+// ═══════════════════════════════════════
+function markPractice(){
+  const today=new Date().toDateString();
+  if(lastDate!==today){const y=new Date(Date.now()-864e5).toDateString();streak=(lastDate===y||!lastDate)?streak+1:1;lastDate=today}
+  sessions++;updateHome();
+}
+
+// ═══════════════════════════════════════
+//  SCREENS
+// ═══════════════════════════════════════
+function showScreen(name){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  const titles={home:"나의 확언",practice:"확언 중",complete:"오늘의 확언 완료",ai:"AI 확언 추천",editor:"확언 편집",myvoice:"내 목소리 확언",history:"확언 일지"};
+  document.getElementById("headerTitle").textContent=titles[name]||"";
+  const el=document.getElementById("screen"+name.charAt(0).toUpperCase()+name.slice(1));
+  if(el)el.classList.add("active");
+  const back=document.getElementById("backBtn"),spacer=document.getElementById("backSpacer");
+  if(name==="home"){back.classList.add("hidden");spacer.classList.remove("hidden")}
+  else{back.classList.remove("hidden");spacer.classList.add("hidden")}
+  if(name==="editor")renderEditor();
+  if(name==="history")renderHistory();
+  if(name==="ai")renderAi();
+  if(name==="myvoice")renderMyVoiceLibrary();
+}
+function goHome(){stopAll();stopMusic();musicOn=false;isAutoPlay=false;clearInterval(autoTimer);showScreen("home");updateHome()}
+
+// ═══════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════
+function updateHome(){
+  document.getElementById("streakNum").textContent=streak;
+  document.getElementById("streakMsg").textContent=streak===0?"오늘 첫 확언을 시작해보세요":streak+"일째 확언 중!";
+  document.getElementById("totalSessions").textContent=sessions;
+  renderCatPills("catPills",selCat,c=>{selCat=c;updateHome()});
+  document.getElementById("startBtn").textContent="확언 시작하기 ("+filtered().length+"개)";
+}
+function renderCatPills(id,sel,onClick){
+  const el=document.getElementById(id);el.innerHTML="";
+  cats().forEach(c=>{const p=document.createElement("div");p.className="pill"+(sel===c?" on":"");p.textContent=c;p.onclick=()=>onClick(c);el.appendChild(p)});
+}
+
+// ═══════════════════════════════════════
+//  PRACTICE
+// ═══════════════════════════════════════
+function startPractice(){
+  curIdx=0;isAutoPlay=false;clearInterval(autoTimer);isSpeaking=false;isWaiting=false;followRecording=false;
+  showScreen("practice");
+  renderPractice();updateMusicBadge();updateVoiceBadge();updateTimerBadge();renderVoiceStyles();updateSourceBar();
+  // Check if any recorded voices exist
+  const f=filtered();
+  const hasMyVoice=f.some(a=>myVoiceMap[a.text]);
+  if(hasMyVoice&&voiceSource!=="myvoice"){
+    // Hint user
+  }
+  setTimeout(()=>{const ff=filtered();if(voiceOn&&ff[0])speakAffirmation(ff[0].text)},500);
+}
+
+function renderPractice(){
+  const f=filtered(),a=f[curIdx];if(!a)return;
+  document.getElementById("affCat").textContent=a.category;
+  document.getElementById("affCat").className="tag "+(a.custom?"tag-blue":"tag-accent");
+  document.getElementById("affText").textContent=a.text;
+  document.getElementById("affCounter").textContent=(curIdx+1)+" / "+f.length;
+  // Has my voice?
+  const hasRec=!!myVoiceMap[a.text];
+  // Show source bar only if voice is on
+  document.getElementById("voiceSourceBar").classList.toggle("hidden",!voiceOn);
+  // Replay btn
+  const rb=document.getElementById("replayBtn");
+  if(voiceOn&&!isAutoPlay)rb.classList.remove("hidden");else rb.classList.add("hidden");
+  updatePlayPauseBtn();updateHint();renderSpeakingStatus();updateFollowRecordArea();
+  // Reset follow rec UI
+  document.getElementById("followRecAudio").classList.add("hidden");
+  document.getElementById("followRecStatus").textContent="버튼을 누르고 확언을 읽어주세요";
+  document.getElementById("followRecBtn").className="ctrl-btn";
+}
+
+function updateFollowRecordArea(){
+  const show=voiceMode==="follow"&&isWaiting&&!isAutoPlay;
+  document.getElementById("followRecordArea").classList.toggle("hidden",!show);
+}
+
+function goNext(){
+  stopAll();
+  const f=filtered();
+  if(curIdx<f.length-1){
+    fadeCard(()=>{curIdx++;renderPractice();if(voiceOn&&!isAutoPlay)setTimeout(()=>speakAffirmation(f[curIdx].text),350)});
+  }else endPractice();
+}
+function goPrev(){
+  stopAll();
+  const f=filtered();
+  if(curIdx>0){fadeCard(()=>{curIdx--;renderPractice();if(voiceOn&&!isAutoPlay)setTimeout(()=>speakAffirmation(f[curIdx].text),350)})}
+}
+function fadeCard(cb){const c=document.getElementById("practiceCard");c.classList.add("fade-out");setTimeout(()=>{cb();c.classList.remove("fade-out")},350)}
+function replayVoice(){stopAll();const f=filtered();if(f[curIdx])speakAffirmation(f[curIdx].text)}
+
+function confirmRead(){
+  isWaiting=false;renderSpeakingStatus();updateFollowRecordArea();
+  setTimeout(goNext,500);
+}
+
+function toggleAutoPlay(){
+  if(isAutoPlay){isAutoPlay=false;clearInterval(autoTimer);stopAll();renderPractice();return}
+  isAutoPlay=true;
+  const f=filtered();
+  if(voiceOn&&f[curIdx])speakAffirmation(f[curIdx].text);
+  const delay=voiceOn?(voiceMode==="follow"?(intervalSec+5)*1000:(intervalSec+2.5)*1000):intervalSec*1000;
+  autoTimer=setInterval(()=>{
+    stopAll();const f2=filtered();
+    if(curIdx>=f2.length-1){isAutoPlay=false;clearInterval(autoTimer);endPractice();return}
+    fadeCard(()=>{curIdx++;renderPractice();if(voiceOn&&f2[curIdx])setTimeout(()=>speakAffirmation(f2[curIdx].text),400)});
+  },delay);
+  renderPractice();
+}
+
+function endPractice(){
+  stopAll();isAutoPlay=false;clearInterval(autoTimer);markPractice();
+  document.getElementById("completeCount").textContent=filtered().length+"개의 확언을 읽었습니다";
+  document.getElementById("completeStreak").textContent="🔥 "+streak+"일 연속!";
+  document.getElementById("journalInput").value="";
+  document.getElementById("journalRecAudio").classList.add("hidden");journalRecUrl=null;
+  showScreen("complete");
+}
+
+function saveJournal(){
+  const text=document.getElementById("journalInput").value.trim();
+  if(!text&&!journalRecUrl){goHome();return}
+  journals.unshift({date:new Date().toLocaleString("ko-KR"),text,audioUrl:journalRecUrl,aff:filtered()[curIdx]?.text||""});
+  goHome();
+}
+
+// ═══════════════════════════════════════
+//  UI UPDATES
+// ═══════════════════════════════════════
+function updateMusicBadge(){const b=document.getElementById("musicBadge");b.className="badge "+(musicOn?"badge-accent":"badge-off");b.innerHTML="🎵 "+(musicOn?"ON":"OFF")}
+function updateVoiceBadge(){const b=document.getElementById("voiceBadge");b.className="badge "+(voiceOn?"badge-purple":"badge-off");b.innerHTML="🔊 "+(voiceOn?VOICE_CFG[voiceStyle].label:"음성 OFF")}
+function updateTimerBadge(){document.getElementById("timerBadge").innerHTML="⏱ "+intervalSec+"초"}
+function updatePlayPauseBtn(){const b=document.getElementById("playPauseBtn");b.className="ctrl-btn big"+(isAutoPlay?" active":"");b.textContent=isAutoPlay?"⏸":"▶"}
+function updateHint(){
+  const h=document.getElementById("hintText");
+  if(isAutoPlay)h.textContent=voiceOn?"음성 가이드와 함께 자동 진행 중...":intervalSec+"초마다 자동 넘김 중...";
+  else h.textContent=voiceOn?"▶ 자동 진행 · ⏮⏭ 수동 · 🔄 다시 듣기":"▶ 자동 넘김 · ⏮⏭ 수동 이동";
+}
+
+function renderSpeakingStatus(){
+  const area=document.getElementById("speakingArea");
+  if(!voiceOn){area.innerHTML="";return}
+  if(isSpeaking){
+    const srcLabel=voiceSource==="myvoice"&&myVoiceMap[filtered()[curIdx]?.text]?"내 목소리로 ":"";
+    area.innerHTML=`<div class="speaking-bar"><div class="bar-anim"><span></span><span></span><span></span><span></span></div> ${srcLabel}읽어주는 중...</div>`;
+  }else if(isWaiting&&voiceMode==="follow"){
+    area.innerHTML=`
+      <div class="waiting-card">
+        <div style="font-size:20px;margin-bottom:8px">🤫</div>
+        <div style="font-size:15px;font-weight:700;color:var(--green)">소리내어 읽어보세요</div>
+        <div style="font-size:13px;color:#666;margin-top:8px;margin-bottom:16px">준비되면 다음으로 넘어가세요</div>
+        <div class="flex gap-10" style="justify-content:center">
+          <button onclick="replayVoice()" style="padding:10px 20px;border-radius:10px;border:1px solid #DDD;background:var(--card);font-size:13px;font-weight:600;color:var(--sub);cursor:pointer">🔄 다시 듣기</button>
+          <button onclick="confirmRead()" style="padding:10px 24px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:700;cursor:pointer">다음 →</button>
+        </div>
+      </div>`;
+  }else{area.innerHTML=""}
+}
+
+// Voice source
+function setVoiceSource(src){
+  voiceSource=src;updateSourceBar();
+}
+function updateSourceBar(){
+  const tts=document.getElementById("srcTTS"),my=document.getElementById("srcMy");
+  tts.className="source-btn"+(voiceSource==="tts"?" on":"");
+  my.className="source-btn"+(voiceSource==="myvoice"?" on":"");
+  // Count available recordings
+  const f=filtered();
+  const cnt=f.filter(a=>myVoiceMap[a.text]).length;
+  my.innerHTML="🎙 내 목소리"+(cnt>0?" ("+cnt+"개)":"");
+}
+
+// Voice panel
+function toggleVoicePanel(){document.getElementById("voicePanel").classList.toggle("hidden")}
+function toggleVoice(){
+  voiceOn=!voiceOn;if(!voiceOn)stopAll();
+  const t=document.getElementById("voiceToggle");
+  t.className="badge "+(voiceOn?"badge-accent":"badge-off");t.innerHTML="🔊 "+(voiceOn?"ON":"OFF");
+  document.getElementById("voiceSettings").classList.toggle("hidden",!voiceOn);
+  updateVoiceBadge();renderPractice();
+}
+function renderVoiceStyles(){
+  const el=document.getElementById("voiceStylesEl");el.innerHTML="";
+  Object.entries(VOICE_CFG).forEach(([k,cfg])=>{
+    const b=document.createElement("div");b.className="voice-style-btn"+(voiceStyle===k?" on":"");
+    b.innerHTML=`<div style="font-size:22px;margin-bottom:4px">${cfg.icon}</div><div style="font-size:13px;font-weight:700">${cfg.label}</div><div style="font-size:10px;color:#999;margin-top:2px">${cfg.desc}</div>`;
+    b.onclick=()=>{voiceStyle=k;renderVoiceStyles();updateVoiceBadge()};el.appendChild(b);
+  });
+}
+function setVoiceMode(m){
+  voiceMode=m;
+  document.getElementById("modeListenBtn").className="mode-btn"+(m==="listen"?" on":"");
+  document.getElementById("modeFollowBtn").className="mode-btn"+(m==="follow"?" on":"");
+  document.getElementById("modeDesc").textContent=m==="listen"?"확언을 음성으로 읽어줍니다.":"확언을 읽어준 후 따라 읽을 시간이 주어집니다.";
+}
+
+// Timer
+function toggleTimerDD(){document.getElementById("timerDD").classList.toggle("hidden");renderTimerOpts()}
+function renderTimerOpts(){
+  const el=document.getElementById("timerDD");el.innerHTML="";
+  [3,5,7,10].forEach(s=>{const b=document.createElement("button");b.className="timer-opt"+(intervalSec===s?" on":"");b.textContent=s+"초";b.onclick=()=>{intervalSec=s;updateTimerBadge();el.classList.add("hidden")};el.appendChild(b)});
+}
+
+// ═══════════════════════════════════════
+//  MY VOICE LIBRARY
+// ═══════════════════════════════════════
+function renderMyVoiceLibrary(){
+  const el=document.getElementById("myVoiceList");
+  const entries=Object.entries(myVoiceMap);
+  if(entries.length===0){el.innerHTML='<div class="empty">아직 녹음된 확언이 없습니다.<br>따라 읽기 모드에서 🎙 버튼으로 녹음해보세요.</div>';return}
+  el.innerHTML="";
+  entries.forEach(([text,{url,date}])=>{
+    const d=document.createElement("div");d.className="card";
+    const dateStr=date?new Date(date).toLocaleDateString("ko-KR"):"";
+    d.innerHTML=`
+      <div class="flex items-center justify-between">
+        <div style="flex:1">
+          <div class="my-voice-badge">🎙 내 목소리</div>
+          <div style="font-size:15px;font-weight:600;margin-top:8px">"${text}"</div>
+          <div style="font-size:11px;color:#BBB;margin-top:4px">${dateStr} 녹음</div>
+        </div>
+        <button class="sm-btn" style="color:var(--accent)" onclick="deleteMyVoice('${text.replace(/'/g,"\\'")}')">✕</button>
+      </div>
+      <audio src="${url}" controls style="width:100%;height:36px;margin-top:10px"></audio>
+    `;
+    el.appendChild(d);
+  });
+}
+function deleteMyVoice(text){
+  if(!confirm("이 녹음을 삭제할까요?"))return;
+  delete myVoiceMap[text];
+  deleteVoiceFromDB(text);
+  renderMyVoiceLibrary();
+}
+
+// ═══════════════════════════════════════
+//  AI
+// ═══════════════════════════════════════
+function renderAi(){
+  aiMood="";aiGoal="";aiResultsData=[];
+  document.getElementById("aiGenBtn").classList.add("hidden");
+  document.getElementById("aiResultsArea").classList.add("hidden");
+  renderMoodPills();renderGoalPills();
+}
+function renderMoodPills(){const el=document.getElementById("moodPills");el.innerHTML="";["피곤함","불안함","의욕넘침","평범함"].forEach(m=>{const p=document.createElement("div");p.className="pill"+(aiMood===m?" on":"");p.textContent=m;p.onclick=()=>{aiMood=m;renderMoodPills();checkAiReady()};el.appendChild(p)})}
+function renderGoalPills(){const el=document.getElementById("goalPills");el.innerHTML="";["자신감","집중력","건강","성장"].forEach(g=>{const p=document.createElement("div");p.className="pill"+(aiGoal===g?" on":"");p.textContent=g;p.onclick=()=>{aiGoal=g;renderGoalPills();checkAiReady()};el.appendChild(p)})}
+function checkAiReady(){document.getElementById("aiGenBtn").classList.toggle("hidden",!(aiMood&&aiGoal))}
+function generateAi(){
+  aiResultsData=[...(AI_MOOD[aiMood]||AI_MOOD["평범함"]).slice(0,2),...(AI_GOAL[aiGoal]||AI_GOAL["성장"]).slice(0,2)];
+  const el=document.getElementById("aiResultList");el.innerHTML="";
+  aiResultsData.forEach(t=>{const d=document.createElement("div");d.className="card";d.style.cssText="font-size:15px;font-weight:600";d.textContent='"'+t+'"';el.appendChild(d)});
+  document.getElementById("aiResultsArea").classList.remove("hidden");
+}
+function addAiResults(){aiResultsData.forEach(t=>affirmations.push({text:t,category:"AI 추천",custom:true}));aiResultsData=[];goHome()}
+
+// ═══════════════════════════════════════
+//  EDITOR
+// ═══════════════════════════════════════
+function renderEditor(){
+  renderCatPills("editorCatPills",selCat,c=>{selCat=c;renderEditor()});
+  const el=document.getElementById("editorList");el.innerHTML="";
+  filtered().forEach((a,i)=>{
+    const d=document.createElement("div");d.className="card flex items-center gap-12";
+    const hasVoice=myVoiceMap[a.text]?'<span class="my-voice-badge" style="margin-left:6px">🎙</span>':"";
+    d.innerHTML=`<div style="flex:1"><div class="tag ${a.custom?"tag-blue":"tag-accent"}" style="margin-bottom:4px">${a.category}${hasVoice}</div><div style="font-size:14px;font-weight:500">${a.text}</div></div><button class="sm-btn" onclick="editAff(${i})">✏️</button><button class="sm-btn" style="color:var(--accent)" onclick="delAff(${i})">✕</button>`;
+    el.appendChild(d);
+  });
+}
+function addCustomAff(){const inp=document.getElementById("newAffInput"),t=inp.value.trim();if(!t)return;affirmations.push({text:t,category:"내 확언",custom:true});inp.value="";renderEditor()}
+function delAff(i){const f=filtered(),r=affirmations.indexOf(f[i]);if(r>=0)affirmations.splice(r,1);renderEditor()}
+function editAff(i){const f=filtered(),n=prompt("확언 수정:",f[i].text);if(n!==null&&n.trim()){const r=affirmations.indexOf(f[i]);if(r>=0)affirmations[r].text=n.trim();renderEditor()}}
+
+// ═══════════════════════════════════════
+//  HISTORY
+// ═══════════════════════════════════════
+function renderHistory(){
+  const el=document.getElementById("historyList");
+  if(!journals.length){el.innerHTML='<div class="empty">아직 기록이 없습니다.<br>확언을 마친 후 느낀 점을 기록해보세요.</div>';return}
+  el.innerHTML="";
+  journals.forEach(j=>{
+    const d=document.createElement("div");d.className="card";
+    let h='<div style="font-size:11px;color:#BBB">'+j.date+'</div>';
+    if(j.aff)h+='<div style="font-size:12px;color:var(--accent);margin-top:4px;font-weight:600">"'+j.aff+'"</div>';
+    if(j.text)h+='<div style="font-size:14px;margin-top:8px;line-height:1.6;color:#333">'+j.text+'</div>';
+    if(j.audioUrl)h+='<audio src="'+j.audioUrl+'" controls style="width:100%;margin-top:8px;height:36px"></audio>';
+    d.innerHTML=h;el.appendChild(d);
+  });
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+initDB().then(()=>{updateHome()});
+document.addEventListener("click",e=>{
+  const td=document.getElementById("timerDD"),tb=document.getElementById("timerBadge");
+  if(td&&!td.contains(e.target)&&e.target!==tb)td.classList.add("hidden");
+});
+</script>
+</body>
+</html>
